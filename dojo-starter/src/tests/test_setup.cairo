@@ -62,7 +62,7 @@ mod setup {
         let (world, systems) = spawn_game();
 
         let game_id: u256 = 12;
-        systems.player_actions.spawn(world, PLAYER(), PLAYER2(), game_id);
+        systems.player_actions.spawn(world, game_id);
         let player_1_bat = systems.player_actions.get_bats(world, game_id, 1);
         assert(player_1_bat.y_index == 200, 'different position detected');
         assert(player_1_bat.game_id == 12, 'different position detected');
@@ -89,7 +89,7 @@ mod setup {
         let (world, systems) = spawn_game();
 
         let game_id: u256 = 12;
-        systems.player_actions.spawn(world, PLAYER(), PLAYER2(), game_id);
+        systems.player_actions.spawn(world, game_id);
         systems.player_actions.move(world, game_id, 1, 1);
         let player_1_bat = systems.player_actions.get_bats(world, game_id, 1);
         assert(player_1_bat.y_index == 199, 'different position detected');
@@ -111,7 +111,7 @@ mod setup {
         let (world, systems) = spawn_game();
 
         let game_id: u256 = 12;
-        systems.player_actions.spawn(world, PLAYER(), PLAYER2(), game_id);
+        systems.player_actions.spawn(world, game_id);
         systems.player_actions.iter(world, game_id, 1);
 
         let ball = systems.player_actions.get_ball(world, game_id,);
@@ -128,7 +128,7 @@ mod setup {
         let (world, systems) = spawn_game();
 
         let game_id: u256 = 12;
-        systems.player_actions.spawn(world, PLAYER(), PLAYER2(), game_id);
+        systems.player_actions.spawn(world, game_id);
         let mut bat_turn = 109;
         loop {
             if (bat_turn == 0) {
@@ -181,7 +181,7 @@ mod setup {
         let (world, systems) = spawn_game();
 
         let game_id: u256 = 12;
-        systems.player_actions.spawn(world, PLAYER(), PLAYER2(), game_id);
+        systems.player_actions.spawn(world, game_id);
         let mut bat_turn = 109;
         loop {
             if (bat_turn == 0) {

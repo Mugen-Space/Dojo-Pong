@@ -1,4 +1,4 @@
-import { AccountInterface } from "starknet";
+import { Account, AccountInterface } from "starknet";
 import { Entity, getComponentValue } from "@dojoengine/recs";
 import { uuid } from "@latticexyz/utils";
 import { ClientComponents } from "./createClientComponents";
@@ -18,7 +18,7 @@ export function createSystemCalls(
   contractComponents: ContractComponents,
   { Bat, Ball }: ClientComponents
 ) {
-  const spawn = async (account: AccountInterface) => {
+  const spawn = async (account: Account) => {
     const entityId = getEntityIdFromKeys([BigInt(account.address)]) as Entity;
 
     const batId = uuid();

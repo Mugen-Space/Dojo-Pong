@@ -100,8 +100,7 @@ function App() {
         <button onClick={() => spawn(account.account)}>Spawn</button>
         <div>bat stats: {bat ? `${bat.y_index}` : "Need to Spawn"}</div>
         <div>
-          ball:{" "}
-          {ball ? `${ball.x_position}, ${ball.y_position}` : "Need to Spawn"}
+          ball: {ball ? `${ball.x_position}, ${ball.y_position}` : "Need to Spawn"}
         </div>
       </div>
 

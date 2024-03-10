@@ -1,0 +1,322 @@
+schema {
+  query: World__Query
+  subscription: World__Subscription
+}
+
+scalar ContractAddress
+
+scalar Cursor
+
+scalar DateTime
+
+scalar Enum
+
+union ModelUnion = Moves | Position
+
+type Moves {
+  player: ContractAddress
+  remaining: u8
+  last_direction: Enum
+  entity: World__Entity
+}
+
+type MovesConnection {
+  edges: [MovesEdge]
+  totalCount: Int!
+  pageInfo: World__PageInfo!
+}
+
+type MovesEdge {
+  node: Moves
+  cursor: Cursor
+}
+
+input MovesOrder {
+  direction: OrderDirection!
+  field: MovesOrderField!
+}
+
+enum MovesOrderField {
+  PLAYER
+  REMAINING
+  LAST_DIRECTION
+}
+
+input MovesWhereInput {
+  player: ContractAddress
+  playerGT: ContractAddress
+  playerGTE: ContractAddress
+  playerLT: ContractAddress
+  playerLTE: ContractAddress
+  playerNEQ: ContractAddress
+  playerEQ: ContractAddress
+  remaining: u8
+  remainingGT: u8
+  remainingGTE: u8
+  remainingLT: u8
+  remainingLTE: u8
+  remainingNEQ: u8
+  remainingEQ: u8
+  last_direction: Enum
+}
+
+enum OrderDirection {
+  ASC
+  DESC
+}
+
+type Position {
+  player: ContractAddress
+  vec: Position_Vec2
+  entity: World__Entity
+}
+
+type PositionConnection {
+  edges: [PositionEdge]
+  totalCount: Int!
+  pageInfo: World__PageInfo!
+}
+
+type PositionEdge {
+  node: Position
+  cursor: Cursor
+}
+
+input PositionOrder {
+  direction: OrderDirection!
+  field: PositionOrderField!
+}
+
+enum PositionOrderField {
+  PLAYER
+  VEC
+}
+
+input PositionWhereInput {
+  player: ContractAddress
+  playerGT: ContractAddress
+  playerGTE: ContractAddress
+  playerLT: ContractAddress
+  playerLTE: ContractAddress
+  playerNEQ: ContractAddress
+  playerEQ: ContractAddress
+}
+
+type Position_Vec2 {
+  x: u32
+  y: u32
+}
+
+type World__Content {
+  name: String
+  description: String
+  website: String
+  iconUri: String
+  coverUri: String
+  socials: [World__Social]
+}
+
+type World__Entity {
+  id: ID
+  keys: [String]
+  eventId: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  models: [ModelUnion]
+}
+
+type World__EntityConnection {
+  edges: [World__EntityEdge]
+  totalCount: Int!
+  pageInfo: World__PageInfo!
+}
+
+type World__EntityEdge {
+  node: World__Entity
+  cursor: Cursor
+}
+
+type World__Event {
+  id: ID
+  keys: [String]
+  data: [String]
+  createdAt: DateTime
+  transactionHash: String
+}
+
+type World__EventConnection {
+  edges: [World__EventEdge]
+  totalCount: Int!
+  pageInfo: World__PageInfo!
+}
+
+type World__EventEdge {
+  node: World__Event
+  cursor: Cursor
+}
+
+type World__Metadata {
+  id: ID
+  uri: String
+  worldAddress: String!
+  content: World__Content
+  iconImg: String
+  coverImg: String
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type World__MetadataConnection {
+  edges: [World__MetadataEdge]
+  totalCount: Int!
+  pageInfo: World__PageInfo!
+}
+
+type World__MetadataEdge {
+  node: World__Metadata
+  cursor: Cursor
+}
+
+type World__Model {
+  id: ID
+  name: String
+  classHash: felt252
+  transactionHash: felt252
+  createdAt: DateTime
+}
+
+type World__ModelConnection {
+  edges: [World__ModelEdge]
+  totalCount: Int!
+  pageInfo: World__PageInfo!
+}
+
+type World__ModelEdge {
+  node: World__Model
+  cursor: Cursor
+}
+
+input World__ModelOrder {
+  direction: OrderDirection!
+  field: World__ModelOrderField!
+}
+
+enum World__ModelOrderField {
+  NAME
+  CLASS_HASH
+}
+
+type World__PageInfo {
+  hasPreviousPage: Boolean
+  hasNextPage: Boolean
+  startCursor: Cursor
+  endCursor: Cursor
+}
+
+type World__Query {
+  entity(id: ID!): World__Entity!
+  entities(
+    first: Int
+    last: Int
+    before: Cursor
+    after: Cursor
+    offset: Int
+    limit: Int
+    keys: [String]
+  ): World__EntityConnection
+  events(
+    first: Int
+    last: Int
+    before: Cursor
+    after: Cursor
+    offset: Int
+    limit: Int
+    keys: [String]
+  ): World__EventConnection
+  metadatas(
+    first: Int
+    last: Int
+    before: Cursor
+    after: Cursor
+    offset: Int
+    limit: Int
+  ): World__MetadataConnection
+  model(id: ID!): World__Model!
+  models(
+    first: Int
+    last: Int
+    before: Cursor
+    after: Cursor
+    offset: Int
+    limit: Int
+    order: World__ModelOrder
+  ): World__ModelConnection
+  transaction(transactionHash: ID!): World__Transaction!
+  transactions(
+    first: Int
+    last: Int
+    before: Cursor
+    after: Cursor
+    offset: Int
+    limit: Int
+  ): World__TransactionConnection
+  movesModels(
+    first: Int
+    last: Int
+    before: Cursor
+    after: Cursor
+    offset: Int
+    limit: Int
+    where: MovesWhereInput
+    order: MovesOrder
+  ): MovesConnection
+  positionModels(
+    first: Int
+    last: Int
+    before: Cursor
+    after: Cursor
+    offset: Int
+    limit: Int
+    where: PositionWhereInput
+    order: PositionOrder
+  ): PositionConnection
+}
+
+type World__Social {
+  name: String
+  url: String
+}
+
+type World__Subscription {
+  entityUpdated(id: ID): World__Entity!
+  eventEmitted(keys: [String]): World__Event!
+  modelRegistered(id: ID): World__Model!
+}
+
+type World__Transaction {
+  id: ID
+  transactionHash: felt252
+  senderAddress: felt252
+  calldata: [felt252]
+  maxFee: felt252
+  signature: [felt252]
+  nonce: felt252
+  createdAt: DateTime
+}
+
+type World__TransactionConnection {
+  edges: [World__TransactionEdge]
+  totalCount: Int!
+  pageInfo: World__PageInfo!
+}
+
+type World__TransactionEdge {
+  node: World__Transaction
+  cursor: Cursor
+}
+
+scalar felt252
+
+scalar u32
+
+scalar u8

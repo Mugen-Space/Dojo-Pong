@@ -56,16 +56,16 @@ export async function setup({ ...config }: DojoConfig) {
     await burnerManager.init();
 
     return {
-      client,
-      clientComponents,
-      contractComponents,
-      systemCalls: createSystemCalls(
-        { client },
+        client,
+        clientComponents,
         contractComponents,
-        clientComponents
-      ),
-      config,
-      dojoProvider,
-      burnerManager,
+        systemCalls: createSystemCalls(
+            { client },
+            contractComponents,
+            clientComponents
+        ),
+        config,
+        dojoProvider,
+        burnerManager,
     };
 }

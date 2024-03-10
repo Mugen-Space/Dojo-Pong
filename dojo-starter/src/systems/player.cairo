@@ -5,13 +5,7 @@ use dojo_starter::models::bat::{Bat};
 use dojo_starter::models::ball::{Ball};
 #[starknet::interface]
 trait IActions<TContractState> {
-    fn spawn(
-        self: @TContractState,
-        world: IWorldDispatcher,
-        player1: ContractAddress,
-        player2: ContractAddress,
-        game_id: u256
-    );
+    fn spawn(self: @TContractState, world: IWorldDispatcher, game_id: u256);
     fn move(
         self: @TContractState,
         world: IWorldDispatcher,
@@ -79,18 +73,12 @@ mod actions {
             get!(world, game_id, (Ball))
         }
         #[inline(always)]
-        fn spawn(
-            self: @ContractState,
-            world: IWorldDispatcher,
-            player1: ContractAddress,
-            player2: ContractAddress,
-            game_id: u256
-        ) {
+        fn spawn(self: @ContractState, world: IWorldDispatcher, game_id: u256) {
             // Access the world dispatcher for reading.
             // let world = self.world_dispatcher.read();
 
             // Get the address of the current caller, possibly the player's address.
-            // let player = get_caller_address();
+            let player = get_caller_address();
 
             // Retrieve the player's current position from the world.
             let player_1_key: u256 = 1;
@@ -107,8 +95,8 @@ mod actions {
             set!(
                 world,
                 (
-                    Bat { game_id: game_id, player_id: 1, player: player1, y_index: 200 },
-                    Bat { game_id: game_id, player_id: 2, player: player2, y_index: 200 },
+                    Bat { game_id: game_id, player_id: 1, player: player, y_index: 200 },
+                    Bat { game_id: game_id, player_id: 2, player: player, y_index: 200 },
                     Ball {
                         game_id: game_id,
                         x_position: 50,
