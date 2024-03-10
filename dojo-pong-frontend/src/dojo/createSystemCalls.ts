@@ -18,35 +18,11 @@ export function createSystemCalls(
   contractComponents: ContractComponents,
   { Bat, Ball }: ClientComponents
 ) {
-  const spawn = async (account: AccountInterface) => {
-    const entityId = getEntityIdFromKeys([BigInt(account.address)]) as Entity;
-
-    const batId = uuid();
-    Bat.addOverride(batId, {
-      entity: entityId,
-      value: {
-        player: BigInt(entityId),
-        game_id: BigInt(1),
-        player_id: BigInt(2),
-        y_index: BigInt(200),
-      },
-    });
-
-    const ballId = uuid();
-    Ball.addOverride(ballId, {
-      entity: entityId,
-      value: {
-        game_id: BigInt(1),
-        x_position: BigInt(50),
-        y_position: BigInt(50),
-        horizontol_direction: BigInt(0),
-        vertical_direction: BigInt(0),
-      },
-    });
-
+  const spawn = async (account: AccountInterface, game_id: number) => {
     try {
       const { transaction_hash } = await client.actions.spawn({
         account,
+        game_id
       });
 
       setComponentsFromEvents(
@@ -59,64 +35,34 @@ export function createSystemCalls(
       );
     } catch (e) {
       console.log(e);
-      Bat.removeOverride(batId);
-      Ball.removeOverride(ballId);
     } finally {
-      Bat.removeOverride(batId);
-      Ball.removeOverride(ballId);
     }
   };
 
-  // const move = async (account: AccountInterface, direction: Direction) => {
-  //   const entityId = getEntityIdFromKeys([BigInt(account.address)]) as Entity;
+  const move = async (account: AccountInterface, game_id: number, direction: number, player_id: number) => {
+    try {
+      const { transaction_hash } = await client.actions.move({
+        account,
+        game_id,
+        direction,
+        player_id
+      });
 
-  //   const positionId = uuid();
-  //   Position.addOverride(positionId, {
-  //     entity: entityId,
-  //     value: {
-  //       player: BigInt(entityId),
-  //       vec: updatePositionWithDirection(
-  //         direction,
-  //         getComponentValue(Position, entityId) as any
-  //       ).vec,
-  //     },
-  //   });
-
-  //   const movesId = uuid();
-  //   Moves.addOverride(movesId, {
-  //     entity: entityId,
-  //     value: {
-  //       player: BigInt(entityId),
-  //       remaining: (getComponentValue(Moves, entityId)?.remaining || 0) - 1,
-  //     },
-  //   });
-
-  //   try {
-  //     const { transaction_hash } = await client.actions.move({
-  //       account,
-  //       direction,
-  //     });
-
-  //     setComponentsFromEvents(
-  //       contractComponents,
-  //       getEvents(
-  //         await account.waitForTransaction(transaction_hash, {
-  //           retryInterval: 100,
-  //         })
-  //       )
-  //     );
-  //   } catch (e) {
-  //     console.log(e);
-  //     Position.removeOverride(positionId);
-  //     Moves.removeOverride(movesId);
-  //   } finally {
-  //     Position.removeOverride(positionId);
-  //     Moves.removeOverride(movesId);
-  //   }
-  // };
-
+      setComponentsFromEvents(
+        contractComponents,
+        getEvents(
+          await account.waitForTransaction(transaction_hash, {
+            retryInterval: 100,
+          })
+        )
+      );
+    } catch (e) {
+      console.log(e);
+    } finally {
+    }
+  };
   return {
     spawn,
-    // move,
+    move,
   };
 }

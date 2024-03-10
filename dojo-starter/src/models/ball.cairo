@@ -1,9 +1,9 @@
 use starknet::ContractAddress;
 
-const BALL_INITIAL_X: u256 = 200;
-const BALL_INITIAL_Y: u256 = 100;
-const BALL_INITIAL_X_SPEED: u256 = 5;
-const BALL_INITIAL_y_SPEED: u256 = 5;
+const BALL_INITIAL_X: u16 = 200;
+const BALL_INITIAL_Y: u16 = 100;
+const BALL_INITIAL_X_SPEED: u16 = 5;
+const BALL_INITIAL_y_SPEED: u16 = 5;
 const BALL_INITAL_HORIZONTOL_DIRECTION: felt252 = 'LEFT';
 const BALL_INITAL_VERTICAL_DIRECTION: felt252 = 'DOWN';
 
@@ -12,11 +12,13 @@ const BALL_INITAL_VERTICAL_DIRECTION: felt252 = 'DOWN';
 struct Ball {
     #[key]
     game_id: u256,
-    x_position: u256,
-    y_position: u256,
-    horizontol_direction: u256,
-    vertical_direction: u256
+    x_position: u16,
+    y_position: u16,
+    horizontol_direction: u16,
+    vertical_direction: u16
 }
+
+
 // trait BallTrait {
 //     fn new();
 //     fn change_direction();

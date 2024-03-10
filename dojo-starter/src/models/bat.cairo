@@ -10,8 +10,11 @@ struct Bat {
     #[key]
     player_id: u256,
     player: ContractAddress,
-    y_index: u256
+    y_index: u16
 }
+
+
+
 // #[derive(Serde, Copy, Drop, Introspect)]
 // enum BatDirection {
 //     None,

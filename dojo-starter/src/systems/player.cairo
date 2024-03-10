@@ -90,7 +90,9 @@ mod actions {
             // let world = self.world_dispatcher.read();
 
             // Get the address of the current caller, possibly the player's address.
-            // let player = get_caller_address();
+            let player = get_caller_address();
+
+            // let game_id: u256 = 42;
 
             // Retrieve the player's current position from the world.
             let player_1_key: u256 = 1;

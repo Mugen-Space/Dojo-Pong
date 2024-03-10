@@ -2,26 +2,18 @@
 
 import { defineComponent, Type as RecsType, World } from "@dojoengine/recs";
 
-export type ContractComponents = Awaited<
-  ReturnType<typeof defineContractComponents>
->;
+export type ContractComponents = Awaited<ReturnType<typeof defineContractComponents>>;
 
 export function defineContractComponents(world: World) {
   return {
     Ball: (() => {
       return defineComponent(
         world,
-        {
-          game_id: RecsType.BigInt,
-          x_position: RecsType.BigInt,
-          y_position: RecsType.BigInt,
-          horizontol_direction: RecsType.BigInt,
-          vertical_direction: RecsType.BigInt,
-        },
+        { game_id: RecsType.BigInt, x_position: RecsType.Number, y_position: RecsType.Number, horizontol_direction: RecsType.Number, vertical_direction: RecsType.Number },
         {
           metadata: {
             name: "Ball",
-            types: ["u256", "u256", "u256", "u256", "u256"],
+            types: ["u256","u16","u16","u16","u16"],
             customTypes: [],
           },
         }
@@ -30,16 +22,11 @@ export function defineContractComponents(world: World) {
     Bat: (() => {
       return defineComponent(
         world,
-        {
-          game_id: RecsType.BigInt,
-          player_id: RecsType.BigInt,
-          player: RecsType.BigInt,
-          y_index: RecsType.BigInt,
-        },
+        { game_id: RecsType.BigInt, player_id: RecsType.BigInt, player: RecsType.BigInt, y_index: RecsType.Number },
         {
           metadata: {
             name: "Bat",
-            types: ["u256", "u256", "contractaddress", "u256"],
+            types: ["u256","u256","contractaddress","u16"],
             customTypes: [],
           },
         }
