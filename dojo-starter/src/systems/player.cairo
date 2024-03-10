@@ -90,31 +90,34 @@ mod actions {
             // let world = self.world_dispatcher.read();
 
             // Get the address of the current caller, possibly the player's address.
-            let player = get_caller_address();
+            // let player = get_caller_address();
 
             // let game_id: u256 = 42;
 
             // Retrieve the player's current position from the world.
             let player_1_key: u256 = 1;
             let player_2_key: u256 = 2;
-            let position_bat_1 = get!(world, (game_id, player_1_key), (Bat));
-            let position_bat_2 = get!(world, (game_id, player_2_key), (Bat));
+            // let position_bat_1 = get!(world, (game_id, player_1_key), (Bat));
+            // let position_bat_2 = get!(world, (game_id, player_2_key), (Bat));
 
-            // Retrieve the player's move data, e.g., how many moves they have left.
-            let ball = get!(world, game_id, (Ball));
-
+            // // Retrieve the player's move data, e.g., how many moves they have left.
+            // let ball = get!(world, game_id, (Ball));
             // Update the world state with the new data.
             // 1. Set players moves to 10
             // 2. Move the player's position 100 units in both the x and y direction.
             set!(
                 world,
                 (
-                    Bat { game_id: game_id, player_id: 1, player: player1, y_index: 200 },
-                    Bat { game_id: game_id, player_id: 2, player: player2, y_index: 200 },
+                    Bat {
+                        game_id: game_id, player_id: player_1_key, player: player1, y_index: 200
+                    },
+                    Bat {
+                        game_id: game_id, player_id: player_2_key, player: player2, y_index: 200
+                    },
                     Ball {
                         game_id: game_id,
-                        x_position: 50,
-                        y_position: 50,
+                        x_position: 300,
+                        y_position: 300,
                         horizontol_direction: 0,
                         vertical_direction: 0
                     }
@@ -148,9 +151,9 @@ mod actions {
             // Calculate the player's next position based on the provided direction.
             // let next = next_position(bat, direction);
             if (direction == 1) {
-                bat.y_index -= 1
+                bat.y_index -= 10;
             } else {
-                bat.y_index += 1
+                bat.y_index += 10;
             }
 
             // Update the world state with the new moves data and position.
@@ -168,11 +171,12 @@ mod actions {
             let mut bat2 = get!(world, (game_id, player_2_key), (Bat));
             let mut ball = get!(world, game_id, (Ball));
             let is_changed = self._update_position(game_id, ref ball, bat1, bat2);
-            if (!is_changed) {
-                emit!(world, GameOver { game_id });
-            } else {
-                set!(world, (ball));
-            }
+            // if (!is_changed) {
+            //     emit!(world, GameOver { game_id });
+            // } else {
+
+            // }
+            set!(world, (ball));
         }
     }
 
@@ -184,19 +188,20 @@ mod actions {
         ) -> bool {
             self._get_new_position(ref ball);
             self._check_wall_collision(ref ball);
-            self._check_bat_collision(ref ball, bat1, bat2, game_id)
+            true
+        // self._check_bat_collision(ref ball, bat1, bat2, game_id)
         }
         #[inline(always)]
         fn _get_new_position(self: @ContractState, ref ball: Ball) {
             if (ball.horizontol_direction == 0) {
-                ball.x_position -= 5;
+                ball.x_position -= 10;
             } else {
-                ball.x_position += 5;
+                ball.x_position += 10;
             }
             if (ball.vertical_direction == 0) {
-                ball.y_position += 5;
+                ball.y_position += 10;
             } else {
-                ball.y_position -= 5;
+                ball.y_position -= 10;
             }
         }
         #[inline(always)]
@@ -225,13 +230,21 @@ mod actions {
         }
         #[inline(always)]
         fn _check_wall_collision(self: @ContractState, ref ball: Ball) {
-            if (ball.y_position <= 10) {
+            if (ball.y_position <= 100) {
                 ball.vertical_direction = 0;
-                ball.y_position = 10 + (10 - ball.y_position);
+            // ball.y_position = 10 + (10 - ball.y_position);
             }
             if (ball.y_position >= 600) {
                 ball.vertical_direction = 1;
-                ball.y_position = 600 - (ball.y_position - 600);
+            // ball.y_position = 600 - (ball.y_position - 600);
+            }
+            if (ball.x_position <= 100) {
+                ball.horizontol_direction = 1;
+            // ball.x_position = 600 - (ball.x_position - 600);
+            }
+            if (ball.x_position >= 600) {
+                ball.horizontol_direction = 0;
+            // ball.x_position = 600 - (ball.x_position - 600);
             }
         }
     }

@@ -7,8 +7,8 @@ import { Direction } from "../../utils";
 export type IWorld = Awaited<ReturnType<typeof setupWorld>>;
 
 export interface MoveProps {
-    account: Account | AccountInterface;
-    direction: Direction;
+  account: Account | AccountInterface;
+  direction: Direction;
 }
 
 // world: IWorldDispatcher,
@@ -17,52 +17,77 @@ export interface MoveProps {
 //             player_id: u256
 
 export interface MoveBat {
-    account: Account | AccountInterface;
-    game_id: number;
-    direction: number;
-    player_id: number;
+  account: Account | AccountInterface;
+  game_id: number;
+  direction: number;
+  player_id: number;
+}
+
+export interface Iteration {
+  account: Account | AccountInterface;
+  game_id: number;
+  tick: number;
 }
 
 export async function setupWorld(provider: DojoProvider) {
-    function actions() {
-        const contract_name = "actions";
+  function actions() {
+    const contract_name = "actions";
 
-        const spawn = async ({ account, game_id }: { account: AccountInterface, game_id: number }) => {
-            console.log(account ,game_id)
-            try {
-                return await provider.execute(
-                    account,
-                    contract_name,
-                    "spawn",
-                    [
-                        provider.getWorldAddress(),
-                        account.address,
-                        account.address,
-                        cairo.uint256(game_id)
-                    ]
-                );
-            } catch (error) {
-                console.error("Error executing spawn:", error);
-                throw error;
-            }
-        };
-
-        const move = async ({ account, game_id, direction, player_id }: MoveBat) => {
-            try {
-                return await provider.execute(account, contract_name, "move", [
-                    provider.getWorldAddress(),
-                    cairo.uint256(game_id),
-                    cairo.uint256(direction),
-                    cairo.uint256(player_id)
-                ]);
-            } catch (error) {
-                console.error("Error executing move:", error);
-                throw error;
-            }
-        };
-        return { spawn, move };
-    }
-    return {
-        actions: actions(),
+    const spawn = async ({
+      account,
+      game_id,
+    }: {
+      account: AccountInterface;
+      game_id: number;
+    }) => {
+      console.log(account, game_id);
+      try {
+        return await provider.execute(account, contract_name, "spawn", [
+          provider.getWorldAddress(),
+          account.address,
+          account.address,
+          cairo.uint256(game_id),
+        ]);
+      } catch (error) {
+        console.error("Error executing spawn:", error);
+        throw error;
+      }
     };
+
+    const move = async ({
+      account,
+      game_id,
+      direction,
+      player_id,
+    }: MoveBat) => {
+      try {
+        return await provider.execute(account, contract_name, "move", [
+          provider.getWorldAddress(),
+          cairo.uint256(game_id),
+          cairo.uint256(direction),
+          cairo.uint256(player_id),
+        ]);
+      } catch (error) {
+        console.error("Error executing move:", error);
+        throw error;
+      }
+    };
+
+    const iter = async ({ account, game_id, tick }: Iteration) => {
+      try {
+        return await provider.execute(account, contract_name, "iter", [
+          provider.getWorldAddress(),
+          cairo.uint256(game_id),
+          tick,
+        ]);
+      } catch (error) {
+        console.error("Error executing iter:", error);
+        throw error;
+      }
+    };
+    return { spawn, move, iter };
+  }
+  return {
+    actions: actions(),
+  };
 }

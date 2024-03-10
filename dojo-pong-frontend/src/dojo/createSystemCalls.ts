@@ -22,7 +22,7 @@ export function createSystemCalls(
     try {
       const { transaction_hash } = await client.actions.spawn({
         account,
-        game_id
+        game_id,
       });
 
       setComponentsFromEvents(
@@ -39,13 +39,44 @@ export function createSystemCalls(
     }
   };
 
-  const move = async (account: AccountInterface, game_id: number, direction: number, player_id: number) => {
+  const move = async (
+    account: AccountInterface,
+    game_id: number,
+    direction: number,
+    player_id: number
+  ) => {
     try {
       const { transaction_hash } = await client.actions.move({
         account,
         game_id,
         direction,
-        player_id
+        player_id,
+      });
+
+      setComponentsFromEvents(
+        contractComponents,
+        getEvents(
+          await account.waitForTransaction(transaction_hash, {
+            retryInterval: 100,
+          })
+        )
+      );
+    } catch (e) {
+      console.log(e);
+    } finally {
+    }
+  };
+
+  const iter = async (
+    account: AccountInterface,
+    game_id: number,
+    tick: number
+  ) => {
+    try {
+      const { transaction_hash } = await client.actions.iter({
+        account,
+        game_id,
+        tick,
       });
 
       setComponentsFromEvents(
@@ -64,5 +95,6 @@ export function createSystemCalls(
   return {
     spawn,
     move,
+    iter,
   };
 }
